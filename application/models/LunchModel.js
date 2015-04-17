@@ -19,35 +19,29 @@ class LunchModel {
             date: this.date
         };
 
-        return new Promise(function(resolve, reject){
+        return new Promise((resolve, reject) => {
             if(this.lunchEntity === undefined) {
                 parseLunchObject.save(dataToSave, {
-                    success: function(lunchEntity) {
+                    success: lunchEntity => {
                         this.lunchEntity = lunchEntity;
                         resolve();
-
-                    }.bind(this)
+                    }
                 });
             } else {
                 this.lunchEntity.save(dataToSave, {
-                    success: function() {
-                        resolve();
-                    }
-                })
+                    success: () =>  resolve()
+                });
             }
-        }.bind(this));
+        });
     }
 
     remove() {
         if(this.lunchEntity) {
-            return new Promise(function(resolve, reject) {
+            return new Promise((resolve, reject) => {
                 this.lunchEntity.destroy({
-                    success: function() {
-                        resolve();
-
-                    }
+                    success: () =>  resolve()
                 });
-            }.bind(this));
+            });
         }
 
     }
@@ -55,10 +49,10 @@ class LunchModel {
     static getAll() {
         var collection = [];
 
-        return new Promise(function(resolve, reject) {
+        return new Promise((resolve, reject) => {
             parseLunchCollection.fetch({
-                success: function(parseCollection) {
-                    parseCollection.forEach(function(item){
+                success: (parseCollection) => {
+                    parseCollection.forEach((item) => {
                         collection.push(new LunchModel({
                             name: item.get('name'),
                             place: item.get('place'),
