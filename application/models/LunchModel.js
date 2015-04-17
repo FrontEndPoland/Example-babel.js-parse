@@ -1,8 +1,8 @@
 
 var ParseLunchObject = Parse.Object.extend("Lunch");
-var ParseLunchCollection = Parse.Collection.extend({
-        model: ParseLunchObject
-    });
+var ParseLunchCollection = Parse.Collection.extend({model: ParseLunchObject});
+var parseLunchObject = new ParseLunchObject;
+var parseLunchCollection = new ParseLunchCollection;
 
 class LunchModel {
     constructor(data) {
@@ -13,7 +13,6 @@ class LunchModel {
     }
 
     save() {
-        var self = this;
         var dataToSave = {
             name: this.name,
             place: this.place,
@@ -21,24 +20,22 @@ class LunchModel {
         };
 
         return new Promise(function(resolve, reject){
-            if(self.lunchEntity === undefined) {
-
-                var parseLunchObject = new ParseLunchObject();
+            if(this.lunchEntity === undefined) {
                 parseLunchObject.save(dataToSave, {
                     success: function(lunchEntity) {
-                        self.lunchEntity = lunchEntity;
+                        this.lunchEntity = lunchEntity;
                         resolve();
 
-                    }
+                    }.bind(this)
                 });
             } else {
-                self.lunchEntity.save(dataToSave, {
+                this.lunchEntity.save(dataToSave, {
                     success: function() {
                         resolve();
                     }
                 })
             }
-        });
+        }.bind(this));
     }
 
     remove() {
@@ -50,7 +47,7 @@ class LunchModel {
 
                     }
                 });
-            });
+            }.bind(this));
         }
 
     }
@@ -59,7 +56,7 @@ class LunchModel {
         var collection = [];
 
         return new Promise(function(resolve, reject) {
-            ParseLunchCollection.fetch({
+            parseLunchCollection.fetch({
                 success: function(parseCollection) {
                     parseCollection.forEach(function(item){
                         collection.push(new LunchModel({
